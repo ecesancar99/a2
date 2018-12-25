@@ -18,22 +18,43 @@ comment_adding = '''<form action = "/static/index.html" method = "post">
 	<fieldset>
 	<legend>Visitors's Comments:</legend>
 	<legend>Your Comment:</legend>
-	<textarea name="comment" rows="5" cols="100">Please be nice on your comments</textarea>
+	<textarea name="comment" rows="5" cols="100">Please write your comments here :)</textarea>
 	<legend>Password:</legend>
-	<input type = "password" name = "password" ><br>
-	<input type = "submit">
-	</fieldset>
-	</form>
-	'''
-
+    <input type = "password" name = "password" ><br>
+    <input type = "submit" name="submit">
+    </fieldset>
+    <br/>
+    <br/>
+    </form>
+    '''
 all_comments = []
+
+evaluation_adding = '''<form action = "/static/index.html" method = "post">
+    <fieldset>
+    <legend> Visitors' Evaluations: <legend>
+    <legend> Which point do you give to this website? </legend>
+    <select name ="points">
+        <option value="0"> 0 </option>
+        <option value="1"> 1 </option>
+        <option value="2"> 2 </option>
+        <option value="3"> 3 </option>
+        <option value="4"> 4 </option>
+        <option value="5"> 5 </option>
+    </select>
+    <legend>Password:</legend>
+    <input type = "password" name = "password" ><br>
+    <input type = "submit" name="submit">
+    </fieldset>
+    </form>'''
+all_evalutions =[]
+
+
 
 @route('/static/index.html')
 def comment_section():
 	page = '''<!DOCTYPE html>
     <html>
-
-    	<head>
+        <head>
     		<title> That '70's show </title>
     		<link rel="stylesheet" href="styles.css">
     		<meta charset="UTF-8">
@@ -41,7 +62,6 @@ def comment_section():
     	</head>
 
     	<body>
-
     		<br>
     		<div class="navbar">
     		<ul style="background-color:DimGray;">
@@ -58,9 +78,7 @@ def comment_section():
     		<img src="logo.png" alt="That 70's Show!">
     		</div>
 
-
-
-    		<p> That 70's show was a sit-com about 6 teens adventures living in the town of Wisconsin in 70's. The show last
+            <p> That 70's show was a sit-com about 6 teens adventures living in the town of Wisconsin in 70's. The show last
     	8 seasons and was aired on FOX from <em>1998 to 2006.</em> The main characters are <b> Eric, Donna, Fez, Michael, Jackie,
     	and Hyde. </b> </p> <blockquote cite="http://that70sshow.wikia.com/wiki/That_%2770s_Show">Eric Forman is a nerdy teenage boy; Donna Pinciotti is the feminist
     	next-door neighbor and Eric's girlfriend; Steven Hyde, a cynical, hard-rocking stoner and Eric's childhood friend; Michael Kelso,
@@ -88,14 +106,15 @@ def comment_section():
     	</body>
     </html>
 
-			''' + comment_adding
+			''' + comment_adding + evaluation_adding
 
 	i = 1
-	page = page+ "<p>Visitors' Comments:<br><p>"
+	page = page+ "<p>Visitors' Comments and Evalutions:<br><p>"
 	for x in all_comments:
-			page = page+ "<p>%d. %s<br><p>" % (i, x)
+			page = page+ "<p>%d. %s<br></p>" + all_evalutions[i-1]% (i, x)
 			i=i+1
 	return page
+
 
 @route('/static/index.html', method='POST')
 def post_comment():
@@ -157,7 +176,7 @@ def post_comment():
     	</body>
     </html>
 
-			''' + comment_adding
+			''' + comment_adding + evaluation_adding
 	if request.POST and (create_hash(request.POST['password'])) == password:
 		print(5)
 		all_comments.append(request.POST['comment'])
@@ -169,6 +188,7 @@ def post_comment():
 			i=i+1
 
 	return page
+
 
 
 
